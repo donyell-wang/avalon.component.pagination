@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>avalon-component-pagination</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="//cdn.bootcss.com/avalon.js/1.5.5/avalon.min.js"></script>
+    <script>
+    avalon.library("com", {
+        $init: function(){},
+        $childReady: function(){},
+        $ready: function(){},
+        $dispose: function(){}
+    });
+    </script>
+  </head>
+
+  <body>
+    <div class="container">
+        <div class="page-header">
+          <h1>avalon-component-pagination<small></small></h1>
+        </div>
+      <div class="ms-controller" ms-controller="indexCtrl">
+          <div class="row">
+              <div class="col-lg-6">
+                  <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">Preview</h3>
+                      </div>
+                      <div class="panel-body">
+                          <div class="form-group">
+                            <label for="inputPageNumber">Total Pages</label>
+                            <input type="number" class="form-control" id="inputPageNumber" ms-duplex="pagesCount">
+                          </div>
+                          <div style="text-align:center;">
+                              <div class="well well-lg">
+                                  <h4>page:<span id="current_page_number">1</span></h4>
+                              </div>
+                              <com:pagination config="$pagerConfig"></com:pagination>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-lg-6">
+                  <p class="lead">
+                      This component is simple and easy to use with AvalonJS.<br />
+                      Both AvalonJS 1.x and 2.x version are provided.<br />
+                      No style files is included, the style is designed to be rely on Bootstrap.
+                  </p>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-lg-12">
+                  <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">Usage</h3>
+                      </div>
+                      <div class="panel-body">
+                          <h4>html ( avalon 1.x ):</h4>
+                          <pre>
+&lt;com:pagination config="$pagerConfig"&gt;&lt;/com:pagination&gt;
+                          </pre>
+                          <h4>html ( avalon 2.x ):</h4>
+                          <pre>
+&lt;xmp is="ms-pagination" ms-widget="@$pagerConfig"&gt;&lt;/xmp&gt;
+                          </pre>
+                          <h4>javascript:</h4>
+                          <pre>
+$pagerConfig:{
+    $onclicked:function (page_number) {
+        //do something here
+    },
+    $onready:function (ev, vm) {
+        //do something here
+        //you get component vm here
+    }
+}
+                          </pre>
+                          <h4>APIs:</h4>
+                          <pre>
+                                <table class="table">
+                                  <caption>attributes</caption>
+                                  <tbody>
+                                    <tr>
+                                      <td>current</td>
+                                      <td>active(current) page number, default:1</td>
+                                    </tr>
+                                    <tr>
+                                      <td>totalPage</td>
+                                      <td>total page number, default:1</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                                <table class="table">
+                                  <caption>attributes (function)</caption>
+                                  <tbody>
+                                    <tr>
+                                      <td>$onclicked</td>
+                                      <td>called when button is clicked</td>
+                                    </tr>
+                                    <tr>
+                                      <td>$onready</td>
+                                      <td>called when component is ready (in the dom)</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                                <table class="table">
+                                  <caption>interfaces (call by vmodel)</caption>
+                                  <tbody>
+                                    <tr>
+                                      <td>setCurrent</td>
+                                      <td>set current page number</td>
+                                    </tr>
+                                    <tr>
+                                      <td>setTotalPage</td>
+                                      <td>set total page number</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                          </pre>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+      </div>
+
+
+      <div class="footer">
+        <!-- <p>&copy; Company 2014</p> -->
+      </div>
+
+    </div> <!-- /container -->
+
+    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script>
+        avalon.config({
+            baseUrl: '/test',
+            paths: {
+                    pagination: '/avalon.component.pagination/avalon.1.x/pagination/avalon.pagination.js'
+                }
+            });
+         require(['pagination'], function () {
+             avalon.ready(function () {
+                 var indexVM = avalon.define({
+                     $id: "indexCtrl",
+                     pagesCount:10,
+                     $pagerConfig:{
+                        totalPage:10,
+                        $onclicked:function (idx) {
+                            $('#current_page_number').text(idx);
+                        },
+                        $onready:function (ev, vm) {
+                            indexVM.$pagerConfig.$_vm = vm;
+                        },
+                        $_vm:null
+                    },
+                 });
+                 indexVM.$watch('pagesCount',function (new_val, old_val) {
+                     if(new_val > 0){
+                         $('#current_page_number').text(1);
+                         indexVM.$pagerConfig.$_vm.setCurrent(1);
+                         indexVM.$pagerConfig.$_vm.setTotalPage(new_val);
+                     }
+                 })
+                 avalon.scan();
+             });
+         });
+    </script>
+  </body>
+</html>
